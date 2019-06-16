@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 public class HashMapOpenAddressing implements MapOpenAddressing {
 
-    static final int DEFAULT_INITIAL_CAPACITY = 16;
+    static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // 16
     static final double DEFAULT_LOAD_FACTOR = 0.5;
     static final int LINEAR_PROBING_COEFFICIENT = 31; // always relatively prime with current capacity
 
@@ -150,7 +150,7 @@ public class HashMapOpenAddressing implements MapOpenAddressing {
      * @return a hash value from the interval [0, table.length)
      */
     final int hash(int keyHash) {
-        return (keyHash & Integer.MAX_VALUE) % table.length;
+        return (keyHash & Integer.MAX_VALUE) % capacity;
     }
 
     /**
@@ -280,6 +280,7 @@ public class HashMapOpenAddressing implements MapOpenAddressing {
     @Override
     public boolean containsKey(final Integer key) {
         return Arrays.stream(table)
+                .filter(Objects::nonNull)
                 .map(Node::getKey)
                 .anyMatch(k -> k.equals(key));
     }
@@ -290,6 +291,7 @@ public class HashMapOpenAddressing implements MapOpenAddressing {
     @Override
     public boolean containsValue(final Long value) {
         return Arrays.stream(table)
+                .filter(Objects::nonNull)
                 .map(Node::getValue)
                 .anyMatch(v -> Objects.equals(v, value));
     }
@@ -300,6 +302,7 @@ public class HashMapOpenAddressing implements MapOpenAddressing {
     @Override
     public Integer[] keys() {
         return Arrays.stream(table)
+                .filter(Objects::nonNull)
                 .map(Node::getKey)
                 .toArray(Integer[]::new);
     }
@@ -310,6 +313,7 @@ public class HashMapOpenAddressing implements MapOpenAddressing {
     @Override
     public Long[] values() {
         return Arrays.stream(table)
+                .filter(Objects::nonNull)
                 .map(Node::getValue)
                 .toArray(Long[]::new);
     }
@@ -325,15 +329,17 @@ public class HashMapOpenAddressing implements MapOpenAddressing {
                 return false;
             }
             for (int i = 0; i < this.size(); i++) {
-                Integer key = this.table[i].key;
-                Long value = this.table[i].value;
-                if (value != null) {
-                    if (!value.equals(that.get(key))) {
-                        return false;
-                    }
-                } else {
-                    if (!(that.get(key) == null && that.containsKey(key))) {
-                        return false;
+                if (table[i] != null) {
+                    Integer key = this.table[i].key;
+                    Long value = this.table[i].value;
+                    if (value != null) {
+                        if (!value.equals(that.get(key))) {
+                            return false;
+                        }
+                    } else {
+                        if (!(that.get(key) == null && that.containsKey(key))) {
+                            return false;
+                        }
                     }
                 }
             }
