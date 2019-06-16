@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Tests to compare performance of <tt>HashMapOpenAddressing</tt> implementation
+ * with JDK <tt>HashMap</tt> implementation
+ */
 public class PerformanceTest {
 
     private static final int ATTEMPTS = 1_000_000;

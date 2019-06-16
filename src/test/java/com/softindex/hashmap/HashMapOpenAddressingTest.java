@@ -12,6 +12,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Tests for structural modifications and <tt>MapOpenAddressing</tt> interface operations
+ */
 public class HashMapOpenAddressingTest {
 
     private static final int SMALL_INITIAL_CAPACITY = 2;
@@ -55,7 +58,7 @@ public class HashMapOpenAddressingTest {
     public void test_collision_is_resolved() {
         map = new HashMapOpenAddressing();
         map.put(KEY_1, VALUE_1);
-        final int collisionKey = KEY_1 + HashMapOpenAddressing.DEFAULT_INITIAL_CAPACITY;
+        final int collisionKey = KEY_1 + map.capacity;
         map.put(collisionKey, VALUE_2);
         assertThat(map.size, is(2));
         assertThat(map.get(KEY_1), is(VALUE_1));
@@ -71,7 +74,7 @@ public class HashMapOpenAddressingTest {
         assertThat(map.size, is(size));
         // put next element
         map.put(KEY_2, VALUE_2);
-        // check hash table parameters changed correct
+        // check hash table properties changed correct
         assertThat(map.capacity, is(SMALL_INITIAL_CAPACITY << 1));
         assertThat(map.size, is(++size));
         assertThat(map.get(KEY_1), is(VALUE_1));

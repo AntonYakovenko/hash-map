@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Hash table with open addressing implementation using linear probing
+ * Hash table implementation with open addressing using linear probing
  * probe sequence
  *
  * <p>This implementation provides constant-time performance for the basic
@@ -15,7 +15,7 @@ import java.util.Objects;
  * <p>Features of this implementation:
  * <ul>
  * <li>Hash table does not allow <tt>null</tt> keys</li>
- * <li>Capacity of hash table is always a power of 2. So that it is
+ * <li>Capacity of hash table is always a power of 2. So that it is always
  * relatively prime with linear probing coefficient (31) and never produces
  * a cycle when resolving collisions</li>
  * <li>An instance of <tt>HashMapOpenAddressing</tt> has two parameters that affect
@@ -187,7 +187,7 @@ public class HashMapOpenAddressing implements MapOpenAddressing {
             return null;
         }
         final int offset = hash(key);
-        // linearly probe from original hash until find an element otherwise return null
+        // linearly probe from original hash until find an element, otherwise return null
         for (int i = offset, x = 1; ; i = hash(offset + probe(x++))) {
             if (table[i] != null) { // check a non-null key
                 if (table[i].key.equals(key)) { // element found
