@@ -12,7 +12,11 @@ public interface MapOpenAddressing {
 
     void clear();
 
-    Integer[] keySet();
+    boolean containsKey(Integer key);
+
+    boolean containsValue(Long value);
+
+    Integer[] keys();
 
     Long[] values();
 }
